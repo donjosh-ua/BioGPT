@@ -2,3 +2,5 @@
 biogpt_model/
 */scraped_data/
 logs/
+
+*/__pycache__/

@@ -7,6 +7,7 @@ import os
 import subprocess
 import sys
 import logging
+import torch
 
 # Configure logging
 logging.basicConfig(
@@ -66,13 +67,52 @@ def check_gpu_availability():
     try:
         import torch
 
+        logger.info(f"PyTorch version: {torch.__version__}")
+
         if torch.cuda.is_available():
-            logger.info(f"GPU available: {torch.cuda.get_device_name(0)}")
+            gpu_count = torch.cuda.device_count()
+            logger.info("CUDA available: Yes")
+            logger.info(f"Number of GPUs: {gpu_count}")
             logger.info(f"CUDA version: {torch.version.cuda}")
+
+            for i in range(gpu_count):
+                gpu_name = torch.cuda.get_device_name(i)
+                gpu_memory = (
+                    torch.cuda.get_device_properties(i).total_memory / 1024**3
+                )  # GB
+                logger.info(f"GPU {i}: {gpu_name} ({gpu_memory:.1f} GB)")
         else:
-            logger.info("GPU not available - using CPU")
+            logger.warning("CUDA not available - using CPU")
+            logger.info("Possible reasons:")
+            logger.info("1. No NVIDIA GPU detected")
+            logger.info("2. NVIDIA drivers not installed")
+            logger.info("3. CUDA toolkit not installed")
+            logger.info("4. PyTorch installed without CUDA support")
+
+        # Additional checks
+        if hasattr(torch.backends, "cudnn"):
+            logger.info(f"cuDNN enabled: {torch.backends.cudnn.enabled}")
+            if torch.backends.cudnn.enabled:
+                logger.info(f"cuDNN version: {torch.backends.cudnn.version()}")
+
     except ImportError:
         logger.warning("PyTorch not installed - cannot check GPU availability")
+    except Exception as e:
+        logger.error(f"Error checking GPU availability: {e}")
+
+        # Try alternative GPU detection methods
+        try:
+            # Check nvidia-smi command
+            result = subprocess.run(["nvidia-smi"], capture_output=True, text=True)
+            if result.returncode == 0:
+                logger.info("nvidia-smi command works - GPU hardware detected")
+                logger.info("Issue might be with PyTorch CUDA installation")
+            else:
+                logger.info("nvidia-smi command failed - no NVIDIA GPU detected")
+        except FileNotFoundError:
+            logger.info("nvidia-smi not found - NVIDIA drivers might not be installed")
+        except Exception as e2:
+            logger.error(f"Error running nvidia-smi: {e2}")
 
 
 def main():
@@ -87,8 +127,8 @@ def main():
     create_directories()
 
     # Install requirements
-    if not install_requirements():
-        sys.exit(1)
+    # if not install_requirements():
+    #     sys.exit(1)
 
     # Download NLTK data
     if not download_nltk_data():
