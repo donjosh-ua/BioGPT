@@ -7,7 +7,6 @@ import os
 import subprocess
 import sys
 import logging
-import torch
 from src.gpu_diagnostics import check_compatibility, generate_install_commands
 
 
@@ -120,6 +119,8 @@ def check_gpu_availability():
         logger.warning("Could not run GPU diagnostics - dependencies missing")
         # Fallback to basic check
         try:
+            import torch
+
             logger.info(f"PyTorch version: {torch.__version__}")
             logger.info(f"CUDA available: {torch.cuda.is_available()}")
             if torch.cuda.is_available():
