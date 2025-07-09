@@ -8,7 +8,7 @@ import subprocess
 import sys
 import logging
 import torch
-from gpu_diagnostics import check_compatibility, generate_install_commands
+from src.gpu_diagnostics import check_compatibility, generate_install_commands
 
 
 # Configure logging

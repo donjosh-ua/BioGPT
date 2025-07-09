@@ -66,7 +66,7 @@ def check_compatibility():
     cuda_version = get_cuda_version()
     pytorch_info = get_pytorch_info()
 
-    logger.info(f"📊 System Information:")
+    logger.info("📊 System Information:")
     logger.info(f"  NVIDIA Driver: {driver_version or 'Not found'}")
     logger.info(f"  CUDA Toolkit: {cuda_version or 'Not found'}")
 
