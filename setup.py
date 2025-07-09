@@ -65,7 +65,6 @@ def create_directories():
 def check_gpu_availability():
     """Check if GPU is available"""
     try:
-        import torch
 
         logger.info(f"PyTorch version: {torch.__version__}")
 
