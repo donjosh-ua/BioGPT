@@ -1,0 +1,4 @@
+.venv/
+biogpt_model/
+*/scraped_data/
+logs/
