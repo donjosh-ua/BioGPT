@@ -182,10 +182,10 @@ def generate_install_commands():
         elif cuda_major_minor in ["12.4"]:
             pytorch_cmd = "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124"
         else:
-            pytorch_cmd = "pip install torch torchvision torchaudio  # CPU version"
+            pytorch_cmd = "pip install torch torchvision torchaudio"
             logger.warning(f"No PyTorch CUDA build available for CUDA {cuda_version}")
     else:
-        pytorch_cmd = "pip install torch torchvision torchaudio  # CPU version"
+        pytorch_cmd = "pip install torch torchvision torchaudio"
 
     logger.info(f"PyTorch installation: {pytorch_cmd}")
 
