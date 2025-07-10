@@ -6,7 +6,7 @@ CUDA compatibility fixer for BioGPT project
 import subprocess
 import sys
 import os
-from src.gpu_diagnostics import check_compatibility, generate_install_commands
+from gpu_diagnostics import check_compatibility, generate_install_commands
 
 
 def main():
